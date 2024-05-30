@@ -1,0 +1,54 @@
+version: "3.7"
+services:
+  planetsystem-reports:
+    build: .
+    environment:
+      - DB_SERVER=postgressql_14
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+    ports:
+      - 9091:9090
+    volumes:
+      - .m2:/root/.m2
+    networks:
+      - default    # network outside
+      - internal   # network internal
+    depends_on:
+      - postgressql_14
+      
+  # postgressql_jasper:
+  #   image: "postgres:9.6-alpine"
+  #   container_name: postgressql_jasper
+  #   #Volume mounted for database for the storage
+  #   volumes:
+  #     - ./postgressql_jasper_data:/var/lib/postgresql/data
+  #   ports:
+  #     - 5432:5432 # Forward the exposed port 5432 on the container to port 5432 on the host machine
+  #   #Environment variable for DB name, user and password
+  #   environment:
+  #     - POSTGRES_DB=blog
+  #     - POSTGRES_USER=jasper
+  #     - POSTGRES_PASSWORD=jasper
+  #   networks:
+  #     - springapimysql-net 
+  postgressql_14:
+    image: postgres:14.1-alpine
+    container_name: postgressql_14
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5433:5432'
+    networks:
+      - default    # network outside
+      - internal   # network internal
+networks:
+  default:
+    external: true
+    name: reactive-web-server
+  internal:
+    internal: true 
